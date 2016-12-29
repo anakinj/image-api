@@ -1,3 +1,3 @@
-require './api'
+require_relative 'boot'
 
-run Api
+run LovApi::App
