@@ -5,5 +5,6 @@ module LovApi
     end
 
     use LovApi::ImageEndpoint
+    use LovApi::TemperatureEndpoint
   end
 end
