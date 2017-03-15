@@ -1,5 +1,8 @@
 require 'sinatra/base'
 require 'fileutils'
+require 'oj'
+
+Oj.default_options = { mode: :compat }
 
 API_ROOT = File.expand_path File.dirname(__FILE__)
 

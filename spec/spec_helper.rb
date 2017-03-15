@@ -1,5 +1,7 @@
 require 'rack/test'
 require 'simplecov'
+require 'pry'
+
 SimpleCov.start
 
 require_relative '../boot'
