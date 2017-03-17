@@ -2,21 +2,38 @@ module LovApi
   class RRDStore
     RRD_ROOT = File.join(API_ROOT, 'rrd').freeze
 
+    def self.rrd_db_path(name)
+      File.join(RRD_ROOT, "#{name}.rrd")
+    end
+
     def initialize(name)
       @name = name.gsub(/[^0-9a-z ]/i, '')
     end
 
-    def put(val)
+    def put(val, timestamp = Time.now)
       ensure_db
-      update(val)
+      update(val, timestamp)
     end
 
     def get
       ensure_db
-      fetch
+      parse_rrd_result(fetch)
     end
 
     private
+
+    def parse_rrd_result(res)
+      parsed_result = []
+      res.split("\n").drop(2).each do |row|
+        row_values = row.split(': ')
+        next if row_values[1] == 'nan'
+        parsed_result << {
+          time: row_values[0],
+          value: row_values[1].to_f
+        }
+      end
+      parsed_result
+    end
 
     def ensure_db
       FileUtils.mkdir_p(RRD_ROOT)
@@ -24,22 +41,23 @@ module LovApi
     end
 
     def rrd_file
-      File.join(RRD_ROOT, "#{@name}.rrd")
+      self.class.rrd_db_path(@name)
     end
 
-    def update(value)
-      `rrdtool update #{rrd_file} N:#{value.to_f}`
+    def update(value, timestamp)
+      timestamp = Time.now if timestamp.nil?
+      `rrdtool update #{rrd_file} #{timestamp.to_i}:#{value.to_f}`
     end
 
     def fetch
-      `rrdtool fetch #{rrd_file} LAST`.split("\n").drop(2)
+      `rrdtool fetch #{rrd_file} -a LAST`
     end
 
     def create_db
       command = [
         'rrdtool create',
         rrd_file,
-        '--start N',
+        "--start #{Time.now.to_i - 60*60*24}",
         '--step 300',
         'DS:temp:GAUGE:1200:-60:60',
 

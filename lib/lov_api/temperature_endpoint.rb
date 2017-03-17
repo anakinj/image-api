@@ -16,7 +16,7 @@ module LovApi
 
       halt 400 if params[:tag].nil? || params[:value].nil?
 
-      LovApi::RRDStore.new(params[:tag]).put(params[:value])
+      LovApi::RRDStore.new(params[:tag]).put(params[:value], params[:timestamp])
       status 201
     end
   end
