@@ -6,8 +6,9 @@ module LovApi
       File.join(RRD_ROOT, "#{name}.rrd")
     end
 
-    def initialize(name)
+    def initialize(name, logger)
       @name = name.gsub(/[^0-9a-z ]/i, '')
+      @logger = logger
     end
 
     def put(val, timestamp = Time.now)
@@ -59,7 +60,9 @@ module LovApi
       start_time = options[:start].to_i
       end_time   = options[:end].to_i
       func       = (options[:func].to_s).gsub(/[^0-9a-z ]/i, '').upcase
-      `rrdtool fetch #{rrd_file} #{func} -a -r #{resolution} -s #{start_time} -e #{end_time}`
+      cmd = "rrdtool fetch #{rrd_file} #{func} -a -r #{resolution} -s #{start_time} -e #{end_time}"
+      logger.info("Calling fetch with command: #{cmd}")
+      `#{cmd}`
     end
 
     def create_db
