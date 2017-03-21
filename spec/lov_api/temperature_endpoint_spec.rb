@@ -11,8 +11,8 @@ describe LovApi::TemperatureEndpoint do
       get '/temperature?tag=get_test'
       expect(last_response.status).to eq(200)
       json = Oj.load(last_response.body)
-      expect(json.size).to eq(9)
-      expect(json.last['value']).to eq(8.0)
+
+      expect(json.size).to eq(1)
       expect(json.first['value']).to eq(8.0)
     end
   end

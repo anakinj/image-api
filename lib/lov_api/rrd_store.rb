@@ -15,9 +15,9 @@ module LovApi
       update(val, timestamp)
     end
 
-    def get
+    def get(options)
       ensure_db
-      parse_rrd_result(fetch)
+      parse_rrd_result(fetch(options))
     end
 
     private
@@ -28,7 +28,7 @@ module LovApi
         row_values = row.split(': ')
         next if row_values[1] == 'nan'
         parsed_result << {
-          time: row_values[0],
+          time: DateTime.strptime(row_values[0],'%s').iso8601,
           value: row_values[1].to_f
         }
       end
@@ -49,8 +49,17 @@ module LovApi
       `rrdtool update #{rrd_file} #{timestamp.to_i}:#{value.to_f}`
     end
 
-    def fetch
-      `rrdtool fetch #{rrd_file} -a LAST`
+    def fetch(options)
+      options = options.merge(resolution: 300,
+                              start: (Time.now.to_i - 600),
+                              end: Time.now.to_i,
+                              func: 'AVERAGE')
+
+      resolution = options[:resolution].to_i
+      start_time = options[:start].to_i
+      end_time   = options[:end].to_i
+      func       = (options[:func].to_s).gsub(/[^0-9a-z ]/i, '').upcase
+      `rrdtool fetch #{rrd_file} #{func} -a -r #{resolution} -s #{start_time} -e #{end_time}`
     end
 
     def create_db

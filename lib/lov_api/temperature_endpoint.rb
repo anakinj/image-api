@@ -4,11 +4,16 @@ module LovApi
       @logger ||= Logger.new(File.join(API_ROOT, '/log/temperature_endpoint.log'))
     end
 
+    set :show_exceptions, false
+    error do |e|
+      logger.error("#{e.message}: #{e.backtrace}")
+    end
+
     get '/temperature' do
       halt 400 if params[:tag].nil?
       content_type :json
       status 200
-      Oj.dump(LovApi::RRDStore.new(params[:tag]).get)
+      Oj.dump(LovApi::RRDStore.new(params[:tag]).get(params))
     end
 
     post '/temperature' do
