@@ -13,7 +13,12 @@ module LovApi
       halt 400 if params[:tag].nil?
       content_type :json
       status 200
-      Oj.dump(LovApi::RRDStore.new(params[:tag], logger).get(indifferent_params(params)))
+      Oj.dump(LovApi::RRDStore.new(params[:tag], logger).get(
+                func: params[:func],
+                resolution: params[:resolution],
+                start: params[:start],
+                end: params[:end]
+      ))
     end
 
     post '/temperature' do

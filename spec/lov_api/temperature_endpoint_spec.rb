@@ -3,7 +3,7 @@ describe LovApi::TemperatureEndpoint do
   describe 'GET /temperatrue' do
     it 'returns current avg' do
       FileUtils.rm(LovApi::RRDStore.rrd_db_path('gettest'))
-      now = (Time.now.to_i - (300*10))
+      start_now = now = (Time.now.to_i - (300 * 10))
       val = 0
       10.times do
         val += 1
@@ -15,7 +15,14 @@ describe LovApi::TemperatureEndpoint do
       json = Oj.load(last_response.body)
 
       expect(json.size).to eq(1)
-      expect(json.first['value']).to be >9.0
+      expect(json.first['value']).to be > 9.0
+
+      get "/temperature?tag=get_test&func=MIN&start=#{start_now}"
+      expect(last_response.status).to eq(200)
+      json = Oj.load(last_response.body)
+
+      expect(json.size).to eq(8)
+      expect(json.first['value']).to be < 3.0
     end
   end
   describe 'POST /temperature' do
