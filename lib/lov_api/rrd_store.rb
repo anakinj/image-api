@@ -61,7 +61,7 @@ module LovApi
       end_time   = options[:end].to_i
       func       = (options[:func].to_s).gsub(/[^0-9a-z ]/i, '').upcase
       cmd = "rrdtool fetch #{rrd_file} #{func} -a -r #{resolution} -s #{start_time} -e #{end_time}"
-      logger.info("Calling fetch with command: #{cmd}")
+      @logger.info("Calling fetch with command: #{cmd}")
       `#{cmd}`
     end
 
