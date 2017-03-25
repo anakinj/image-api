@@ -1,5 +1,5 @@
 describe LovApi::TemperatureEndpoint do
-  let(:app) { described_class }
+  let(:app) { LovApi.app }
   describe 'GET /temperatrue' do
     it 'returns current avg' do
       FileUtils.rm(LovApi::RRDStore.rrd_db_path('gettest'))

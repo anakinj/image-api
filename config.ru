@@ -1,3 +1,3 @@
 require_relative 'boot'
 
-run LovApi::App
+run LovApi.app

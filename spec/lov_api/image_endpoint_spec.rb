@@ -1,5 +1,5 @@
 describe LovApi::ImageEndpoint do
-  let(:app) { described_class }
+  let(:app) { LovApi.app }
 
   let(:test_file_path) { File.join(API_ROOT, 'spec', 'fixtures', 'test.jpg') }
   let(:user_folder) { File.join(API_ROOT, 'images', 'test_user') }
