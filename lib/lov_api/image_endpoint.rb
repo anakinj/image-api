@@ -15,7 +15,6 @@ module LovApi
 
     post '/image' do
       halt 400 unless params.key?(:file) || params[:file].is_a?(Hash) || params[:file].key?(:filename)
-
       now = Time.now
       user_image_folder_path = user_image_folder(env['REMOTE_USER'])
       year_path = File.join(now.year.to_s, now.month.to_s, now.day.to_s)
@@ -33,7 +32,7 @@ module LovApi
           c.fill('#FFFFFF')
         end
         image.write(image_file)
-      rescue => e
+      rescue StandardError => e
         logger.warn("ImageMagick processing failed, using fallback store mechanism. #{e}")
         File.open(image_file, 'wb') do |f|
           f.write(params[:file][:tempfile].read)

@@ -6,6 +6,9 @@ SimpleCov.start
 
 require_relative '../boot'
 
+ENV['RACK_ENV']     ||= 'test'
+ENV['API_PASSWORD'] ||= 'TESTPASSWORD'
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

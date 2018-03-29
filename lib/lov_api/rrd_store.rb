@@ -29,7 +29,7 @@ module LovApi
         row_values = row.split(': ')
         next if row_values[1] == 'nan'
         parsed_result << {
-          time: DateTime.strptime(row_values[0], '%s').iso8601,
+          time: Time.strptime(row_values[0], '%s').iso8601,
           value: row_values[1].to_f
         }
       end

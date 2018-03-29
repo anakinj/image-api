@@ -1,14 +1,14 @@
 source 'https://rubygems.org'
 
 gem 'mini_magick'
-gem 'sinatra'
 gem 'oj'
 gem 'rack-cors'
+gem 'sinatra'
 
 group :development, :test do
-  gem 'rubocop'
-  gem 'rspec'
-  gem 'rack-test'
-  gem 'simplecov'
   gem 'pry'
+  gem 'rack-test'
+  gem 'rspec'
+  gem 'rubocop'
+  gem 'simplecov'
 end

@@ -4,7 +4,7 @@ require 'oj'
 
 Oj.default_options = { mode: :compat }
 
-API_ROOT = File.expand_path File.dirname(__FILE__)
+API_ROOT = __dir__
 
 def load_path(*paths)
   paths.each do |path|
